@@ -32,6 +32,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   };
   bool _isLoading = false;
 
+
   @override
   void initState() {
     _imageFocusNode.addListener(_updateImageUlr);
@@ -80,7 +81,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
-  void saveForms() {
+  Future<void> saveForms() async {
     final _isValid = _form.currentState.validate();
     if (!_isValid) {
       return;
@@ -94,15 +95,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
     // print(_editedProduct.description);
     // print(_editedProduct.imageUrl);
     if (_editedProduct.id != null) {
-      Provider.of<Products>(context, listen: false)
+      await Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
-      setState(() {
-        _isLoading = false;
-      });
     } else {
-      Provider.of<Products>(context, listen: false)
-          .addProduct(_editedProduct)
-          .catchError((error) {
+      try{
+      await Provider.of<Products>(context, listen: false)
+          .addProduct(_editedProduct);
+      }catch (error) {
         return showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
@@ -118,13 +117,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
             ],
           ),
         );
-      }).then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
-      });
+      }
+    //   finally {
+    // setState(() {
+    // _isLoading = false;
+    // });
+    // Navigator.of(context).pop();
+    // }
     }
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
   }
 
   @override
