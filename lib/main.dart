@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/helpers/custom_route.dart';
 import 'package:shop_app/providers/order.dart';
 import 'package:shop_app/providers/products_provider.dart';
 import 'package:shop_app/screens/auth_screen.dart';
@@ -14,6 +15,7 @@ import './providers/cart.dart';
 import './screens/products_overView_screen.dart';
 import './screens/order_screen.dart';
 import './providers/auth.dart';
+import './helpers/custom_route.dart';
 
 void main() {
   runApp(MyApp());
@@ -46,6 +48,10 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.purple,
             accentColor: Colors.deepOrange,
             fontFamily: 'Lato',
+            pageTransitionsTheme: PageTransitionsTheme(builders: {
+              TargetPlatform.android: CustomPageTransitionBuilder(),
+              TargetPlatform.iOS:  CustomPageTransitionBuilder(),
+            })
           ),
           home: auth.isAuth
               ? ProductOverviewScreen()
